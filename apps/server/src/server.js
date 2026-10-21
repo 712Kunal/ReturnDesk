@@ -2,7 +2,7 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 import requestsRouter from "./routes/requests.js";
-import { AppError, errorHandler } from "./errors.js";
+import { AppError, errorHandler } from "./utils/errors.js";
 
 const app = express();
 
