@@ -1,0 +1,379 @@
+{
+  "v": 11,
+  "name": "ReturnDesk",
+  "folders": [
+    {
+      "v": 11,
+      "name": "reviews",
+      "folders": [],
+      "requests": [
+        {
+          "v": "17",
+          "name": "review",
+          "method": "POST",
+          "endpoint": "http://localhost:4000/api/requests/3/transition",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n  \"status\": \"In Review\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "review-with-refund",
+          "method": "POST",
+          "endpoint": "http://localhost:4000/api/requests/1/transition",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n  \"status\": \"Approved\",\n  \"resolution\": \"Refund\",\n  \"refundAmount\": 1499.50\n}"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "review-with-replacement",
+          "method": "POST",
+          "endpoint": "http://localhost:4000/api/requests/2/transition",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{ \"status\": \"Approved\", \"resolution\": \"Replacement\" }"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "review-with-store-credit",
+          "method": "POST",
+          "endpoint": "http://localhost:4000/api/requests/3/transition",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{ \"status\": \"Approved\", \"resolution\": \"Store Credit\" }"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        }
+      ],
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "headers": [],
+      "variables": [],
+      "description": null
+    },
+    {
+      "v": 11,
+      "name": "complete",
+      "folders": [],
+      "requests": [
+        {
+          "v": "17",
+          "name": "complete-request",
+          "method": "POST",
+          "endpoint": "http://localhost:4000/api/requests/1/transition",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n  \"status\": \"Completed\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        }
+      ],
+      "auth": {
+        "authActive": true,
+        "authType": "inherit"
+      },
+      "headers": [],
+      "variables": [],
+      "description": null
+    },
+    {
+      "v": 11,
+      "name": "search",
+      "folders": [],
+      "requests": [
+        {
+          "v": "17",
+          "name": "default-search",
+          "method": "GET",
+          "endpoint": "http://localhost:4000/api/requests",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "searchBy-name",
+          "method": "GET",
+          "endpoint": "http://localhost:4000/api/requests?q=asha",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "searchBy-orderNumber",
+          "method": "GET",
+          "endpoint": "http://localhost:4000/api/requests?q=ORD-2001",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "searchBy-reference",
+          "method": "GET",
+          "endpoint": "http://localhost:4000/api/requests?q=RD-001003",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        }
+      ],
+      "auth": {
+        "authActive": true,
+        "authType": "inherit"
+      },
+      "headers": [],
+      "variables": [],
+      "description": null
+    },
+    {
+      "v": 11,
+      "name": "requests",
+      "folders": [],
+      "requests": [
+        {
+          "v": "17",
+          "name": "requests",
+          "method": "POST",
+          "endpoint": "http://localhost:4000/api/requests",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n    \"customerName\": \"Omkar Shinde\",\n    \"customerEmail\": \"omkar.shinde@example.com\",\n    \"customerPhone\": \"+91 9023456789\",\n    \"orderNumber\": \"ORD-2022\",\n    \"itemName\": \"Travel Suitcase\",\n    \"quantity\": 1,\n    \"reason\": \"Changed Mind\"\n  }"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "get-request",
+          "method": "GET",
+          "endpoint": "http://localhost:4000/api/requests/1",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": null,
+            "body": null
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        },
+        {
+          "v": "17",
+          "name": "update-request",
+          "method": "PATCH",
+          "endpoint": "http://localhost:4000/api/requests/1",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n  \"quantity\": 2,\n  \"customerPhone\": \"+91 90000 11111\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        }
+      ],
+      "auth": {
+        "authActive": true,
+        "authType": "inherit"
+      },
+      "headers": [],
+      "variables": [],
+      "description": null
+    },
+    {
+      "v": 11,
+      "name": "note",
+      "folders": [],
+      "requests": [
+        {
+          "v": "17",
+          "name": "add-note",
+          "method": "POST",
+          "endpoint": "http://localhost:4000/api/requests/1/notes",
+          "params": [],
+          "headers": [],
+          "preRequestScript": "",
+          "testScript": "",
+          "auth": {
+            "authType": "inherit",
+            "authActive": true
+          },
+          "body": {
+            "contentType": "application/json",
+            "body": "{\n  \"body\": \"Customer sent photos of the damage.\"\n}"
+          },
+          "requestVariables": [],
+          "responses": {},
+          "description": null
+        }
+      ],
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "headers": [],
+      "variables": [],
+      "description": null
+    }
+  ],
+  "requests": [
+    {
+      "v": "17",
+      "name": "health-checkup",
+      "method": "GET",
+      "endpoint": "http://localhost:4000/api/health",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {},
+      "description": null
+    }
+  ],
+  "auth": {
+    "authType": "none",
+    "authActive": true
+  },
+  "headers": [],
+  "variables": [],
+  "description": ""
+}
