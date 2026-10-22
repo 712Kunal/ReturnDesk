@@ -115,16 +115,22 @@ export async function listRequests({
 
 export async function getRequest(id) {
   const { rows } = await pool.query(
-    `SELECT ${COLS} FROM return_requests WHERE id = $1 AND deleted_at IS NULL`,
-    [id],
-  );
+    `SELECT ${COLS} FROM return_requests WHERE id = $1 AND deleted_at IS NULL`, [id]);
   if (!rows[0]) throw notFound();
   const notes = await pool.query(
     `SELECT id, body, created_at AS "createdAt" FROM request_notes
-     WHERE request_id = $1 ORDER BY created_at ASC, id ASC`,
-    [id],
-  );
-  return { ...rows[0], notes: notes.rows };
+     WHERE request_id = $1 ORDER BY created_at ASC, id ASC`, [id]);
+
+  const request = rows[0];
+  return {
+    ...request,
+    notes: notes.rows,
+    actions: {
+      transitions: TRANSITIONS[request.status],
+      canEdit: EDITABLE_STATUSES.includes(request.status),
+      canRemove: REMOVABLE_STATUSES.includes(request.status),
+    },
+  };
 }
 
 // Rule 4: locked once decided

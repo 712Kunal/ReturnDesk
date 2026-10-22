@@ -12,8 +12,11 @@ export default function RootLayout({ children }) {
       <body className="min-h-screen bg-slate-50 text-slate-900 antialiased">
         <header className="border-b border-slate-200 bg-white">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-            <Link href="/" className="text-lg font-bold tracking-tight">
-              SmartHub
+            <Link
+              href="/"
+              className="text-lg font-bold tracking-tight text-slate-700"
+            >
+              ReturnDesk
             </Link>
           </div>
         </header>

@@ -1,12 +1,6 @@
 import Link from "next/link";
 import StatusBadge from "./StatusBadge.js";
-
-const formatDate = (iso) =>
-  new Date(iso).toLocaleDateString("en-IN", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+import { formatDate } from "@/lib/format";
 
 export default function RequestTable({ requests }) {
   return (

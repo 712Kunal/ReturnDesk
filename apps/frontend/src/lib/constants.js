@@ -22,6 +22,8 @@ export const SORT_OPTIONS = [
   { value: "reason", label: "Reason" },
 ];
 
+export const RESOLUTIONS = ["Refund", "Replacement", "Store Credit"];
+
 // Full class names (not built dynamically) so Tailwind can detect them
 export const STATUS_STYLES = {
   Open: {
