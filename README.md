@@ -17,7 +17,10 @@ A returns desk for a small online store. Agents raise return/replacement request
 | Create-request form in the UI | Not done (requests can be created via the API) |
 | Edit form in the UI | Not done (editing works via the API) |
 | Deployment | `<Done / Not done: edit this line honestly>` |
+| API request collection (Hoppscotch) in `docs/` | Done: happy path and search only, no refusal cases |
 | Automated tests | Not done |
+
+Details of what is missing and what I would do next are under [Incomplete](#incomplete-and-next-steps).
 
 ## Tech stack
 
@@ -60,6 +63,7 @@ returndesk/
 
 ```bash
 git clone https://github.com/712Kunal/ReturnDesk
+cd ReturnDesk
 ```
 
 ### 2. Database
@@ -100,16 +104,36 @@ npm run dev              # http://localhost:3000
 |---|---|
 | `NEXT_PUBLIC_API_URL` | Base URL of the API, e.g. `http://localhost:4000/api` |
 
+## Testing the API
+
+`docs/ReturnDesk.hoppscotch.json` is a [Hoppscotch](https://hoppscotch.io) collection. Import it via **Collections, then Import, then Hoppscotch**.
+
+It covers the happy path (create, get, edit, add note, review, approve with each resolution, complete) and the search variants. Two cautions:
+
+- The URLs use fixed ids (`1`, `2`, `3`) and run against `http://localhost:4000`. Run the requests in lifecycle order against a request in the matching state, or change the id.
+- It does **not** include the refusal cases. To see each rule refuse, send these to an existing request in the stated state:
+
+| Rule | State | Request | Expected |
+|---|---|---|---|
+| 1 | Open | `POST /requests/:id/transition` `{"status":"Completed"}` | 409 `INVALID_TRANSITION` |
+| 2 | In Review | `POST /requests/:id/transition` `{"status":"Approved"}` | 422 `VALIDATION_ERROR` |
+| 2 | In Review | same, with `"resolution":"Refund","refundAmount":0` | 422 `VALIDATION_ERROR` |
+| 2 | In Review | same, with `"resolution":"Replacement","refundAmount":100` | 422 `VALIDATION_ERROR` |
+| 3 | any live | `POST /requests` with the same order number and item as an existing live request | 409 `DUPLICATE_LIVE_REQUEST` |
+| 4 | Approved, Rejected or Completed | `PATCH /requests/:id` `{"itemName":"Other"}` | 409 `REQUEST_LOCKED` |
+| 5 | In Review, Approved or Completed | `DELETE /requests/:id` | 409 `NOT_REMOVABLE` |
+| 5 | Open or Rejected | `DELETE /requests/:id`, then `GET` the same id | 204, then 404 `NOT_FOUND` |
+
 ## The business rules and where they are enforced
 
 Every rule is enforced by the server, and the most important ones are also enforced by the database as a backstop. The UI only reflects them.
 
 | Rule | Server enforcement | Database backstop | Error returned |
 |---|---|---|---|
-| 1. Status flow (Open → In Review → Approved → Completed; In Review → Rejected; Rejected and Completed final) | Transition map in `constants.js`, checked in `transitionRequest` | `status` CHECK constraint | `409 INVALID_TRANSITION` (includes the allowed next states) |
+| 1. Status flow (Open → In Review → Approved → Completed; In Review → Rejected; Rejected and Completed final) | Transition map in `constants.js`, checked in `transitionRequest` | `status` CHECK constraint (values only, not transitions) | `409 INVALID_TRANSITION` (includes the allowed next states) |
 | 2. Approval needs a resolution; refund amount > 0 only for Refund | `validateTransition` | `refund_rules` and `approved_needs_resolution` CHECK constraints | `422 VALIDATION_ERROR` (field-level messages) |
 | 3. One live request per order + item | Unique violation translated in the service | Partial unique index `one_live_request_per_item` | `409 DUPLICATE_LIVE_REQUEST` |
-| 4. Locked once Approved, Rejected or Completed | Status check in `updateRequest` | none (see decisions) | `409 REQUEST_LOCKED` |
+| 4. Locked once Approved, Rejected or Completed | Status check in `updateRequest`, under a row lock | none (enforced in the service only) | `409 REQUEST_LOCKED` |
 | 5. Removal is soft, only Open or Rejected | `removeRequest` sets `deleted_at` | none | `409 NOT_REMOVABLE`; removed records return `404` |
 
 ## API
@@ -192,4 +216,18 @@ Every refusal uses the same body:
 - Refund amounts are in INR. Completing a request keeps the resolution recorded at approval.
 - Adding a note to a removed request returns 404, since removed requests cannot be fetched.
 - Removing a request frees its order and item for a new request, because removed rows are excluded from the uniqueness index.
+
+## Incomplete and next steps
+
+**Not done**
+- The UI has no "New request" form and no "Edit" form. Both work through the API (`POST /requests`, `PATCH /requests/:id`).
+- No automated tests. I tested the API by hand in Postman, against every rule.
+- Seed script: `<state exactly what is true, e.g. 'backend/db/seed.js exists (npm run seed, wipes both tables) but I have not run or verified it', or 'not provided'>`
+- `<Edit: deployment status>`
+- `<Edit: whether the responsive layout was checked at 375px on every screen>`
+
+**What I would do next**
+1. Build the create and edit forms, showing field-level server errors, with the edit form hidden when `actions.canEdit` is false.
+2. Add API tests for the five rules (and a concurrency test for duplicate creation).
+3. Add an index for the search columns if the table grows large (for example `pg_trgm`).
 
